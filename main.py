@@ -42,7 +42,7 @@ def processCommand(c):
         link= musicLibrary.music[song]
         webbrowser.open(link)
     elif "news" in c.lower():
-        r = requests.get("https://newsapi.org/v2/top-headlines?country=us&apiKey=dd325f9329534e19bbc86f6c68d33760")
+        r = requests.get("Your api key")
 
 
         if r.status_code == 200:
