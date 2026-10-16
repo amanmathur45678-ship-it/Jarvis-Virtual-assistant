@@ -2,56 +2,57 @@
 
 **Developed by Aman**
 
-A Python-based AI voice assistant designed to perform tasks through voice commands. Jarvis recognizes a wake word, opens websites, plays music, retrieves news headlines, and answers general questions using Google's Gemini AI.
+Jarvis is a Python-based voice assistant that allows users to interact with their computer using voice commands. It can open websites, access music links, retrieve news headlines, and answer general questions using Google's Gemini AI.
+
+The project combines speech recognition, text-to-speech, web automation, and AI-powered responses to provide a simple hands-free assistant experience.
 
 ## Features
 
-- **Voice Recognition:** Activates when the wake word "Jarvis" is recognized.
-- **Web Automation:** Opens Google, Facebook, and YouTube through voice commands.
-- **Music Playback:** Opens configured music links using a custom music library.
-- **News Updates:** Retrieves news articles and reads headlines aloud.
-- **AI Integration:** Uses Google's Gemini API to generate responses to general questions.
-- **Text-to-Speech:** Speaks responses using the `pyttsx3` library.
-- **Hands-Free Operation:** Provides voice-based interaction for supported tasks.
+- **Voice Activation:** Listens for the wake word `Jarvis`.
+- **Website Automation:** Opens Google, Facebook, and YouTube using voice commands.
+- **Music Playback:** Opens configured YouTube links or song search results.
+- **News Updates:** Retrieves news articles and reads their headlines aloud.
+- **Gemini AI Integration:** Processes general questions using Google's Gemini API.
+- **Text-to-Speech:** Uses `pyttsx3` to speak responses.
+- **Speech Recognition:** Converts spoken commands into text.
+- **Modular Code:** Keeps the music library and Gemini API example in separate Python files.
 
 ## Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| Python | Core application logic |
-| SpeechRecognition | Speech-to-text processing |
-| pyttsx3 | Text-to-speech conversion |
-| Google Gemini API | AI-powered responses |
+| Python | Core programming language |
+| SpeechRecognition | Speech recognition |
+| PyAudio | Microphone audio input |
+| pyttsx3 | Text-to-speech |
+| Google Gemini API | AI-generated responses |
 | Requests | HTTP requests for news |
-| Web Browser | Opening websites |
-| musicLibrary | Music URL management |
-| PyAudio | Microphone input support |
+| Web Browser | Opens websites and music links |
 
 ## Project Structure
 
 ```text
 Jarvis/
-├── main.py
-├── musicLibrary.py
-├── requirements.txt
-├── README.md
-└── .gitignore
+├── main.py             # Main voice assistant
+├── client.py           # Standalone Gemini API example
+├── musicLibrary.py     # Song names and YouTube URLs
+├── requirements.txt    # Python dependencies
+├── README.md           # Project documentation
+└── .gitignore          # Files excluded from Git
 ```
 
-*Note: Replace `main.py` with your actual Python filename if it differs.*
+## Prerequisites
 
-## Requirements
-
-Before running Jarvis, ensure you have:
+Before running the project, make sure you have:
 
 - Python installed
 - A working microphone
 - An active internet connection
 - A Google Gemini API key
-- A valid news API key and endpoint
+- A valid news API endpoint and API key
 - The required Python packages
 
-## Installation and Setup
+## Installation
 
 ### 1. Clone the Repository
 
@@ -70,7 +71,7 @@ python -m venv venv
 
 Activate it on Windows:
 
-```bash
+```powershell
 venv\Scripts\activate
 ```
 
@@ -80,15 +81,19 @@ venv\Scripts\activate
 pip install SpeechRecognition pyttsx3 requests google-genai PyAudio
 ```
 
+If PyAudio installation fails, follow the installation instructions for your operating system.
+
 ### 4. Configure API Keys
 
-Set your Gemini API key as an environment variable in Windows PowerShell:
+The Gemini API and news feature require valid credentials and configuration.
+
+For Windows PowerShell, set your Gemini API key:
 
 ```powershell
 $env:GEMINI_API_KEY="your_gemini_api_key"
 ```
 
-Initialize the Gemini client securely in Python:
+Update your Python code to read the key from the environment:
 
 ```python
 import os
@@ -99,100 +104,165 @@ client = genai.Client(
 )
 ```
 
-Configure your news API credentials and endpoint according to your chosen news provider.
+Configure the news API endpoint and authentication according to your chosen news provider.
 
-**Security:** Never upload real API keys or other credentials to a public repository.
+**Security note:** Never commit real API keys, passwords, or private credentials to a public GitHub repository.
 
-## Music Library Setup
+## Music Library
 
-Create a `musicLibrary.py` file containing a dictionary of song names and their URLs.
+The `musicLibrary.py` file stores song identifiers and their corresponding YouTube URLs.
+
+Current configured entries:
+
+| Song Identifier | Action |
+|---|---|
+| `aman` | Opens the configured YouTube video |
+| `aag` | Opens the configured YouTube video |
+| `skyfall` | Opens YouTube search results for Skyfall |
+
+Example usage:
 
 ```python
 music = {
-    "song1": "https://example.com/song1",
-    "song2": "https://example.com/song2"
+    "aman": "YOUR_YOUTUBE_URL",
+    "aag": "YOUR_YOUTUBE_URL",
+    "skyfall": "YOUR_YOUTUBE_SEARCH_URL"
 }
 ```
 
-Replace the example URLs with valid links. The current command parser expects a song identifier as the second word in a command such as `Play song1`.
+The actual URLs are maintained in `musicLibrary.py`.
 
-## Running the Project
+To play a configured entry, use a command such as:
 
-Start the assistant using:
+- `Play aman`
+- `Play aag`
+- `Play skyfall`
+
+The current command parser expects the song identifier to be the second word in the command. Music links open in the web browser rather than being played by a built-in audio player.
+
+## Running the Assistant
+
+Run the main application:
 
 ```bash
 python main.py
 ```
 
-Jarvis will announce its initialization and begin listening for the wake word.
+Jarvis announces its initialization and begins listening for the wake word.
 
-## Available Voice Commands
+### Available Voice Commands
 
-| Command | Description |
+| Voice Command | Action |
 |---|---|
 | `Jarvis` | Activates command listening |
 | `Open Google` | Opens Google |
 | `Open Facebook` | Opens Facebook |
 | `Open YouTube` | Opens YouTube |
-| `Play song1` | Opens the configured music link |
+| `Play aman` | Opens the configured music link |
+| `Play aag` | Opens the configured music link |
+| `Play skyfall` | Opens YouTube search results |
 | `News` | Retrieves and reads news headlines |
-| Ask a question | Sends the question to Gemini AI |
+| Ask a general question | Sends the question to Gemini AI |
+
+Speech recognition uses Google's online recognition service, so an internet connection is required.
+
+## Gemini AI Integration
+
+The project includes a `client.py` file demonstrating how to use the Google Gen AI SDK to generate a response.
+
+The example uses:
+
+```python
+from google import genai
+
+client = genai.Client(api_key="YOUR_API_KEY")
+
+response = client.models.generate_content(
+    model="YOUR_SUPPORTED_GEMINI_MODEL",
+    contents="Enter your question here"
+)
+
+print(response.text)
+```
+
+Replace the placeholders with a valid API key configuration, a model ID supported by your account, and the desired prompt before running the example.
+
+**Note:** The standalone `client.py` example prints the response to the terminal. The main assistant's AI workflow is handled separately in `main.py` unless you explicitly integrate the two files.
+
+## News Integration
+
+The main application uses the `requests` library to retrieve news articles from a configured API endpoint.
+
+When a news response is successful, the program reads article headlines using text-to-speech.
+
+To enable this feature:
+
+1. Choose a news API provider.
+2. Configure its valid endpoint and API credentials.
+3. Ensure the response contains an `articles` list with article titles.
+4. Handle HTTP errors, missing fields, and API limits appropriately.
+
+The news feature will not work until the placeholder request URL is replaced with a valid endpoint.
 
 ## How It Works
 
-1. Jarvis initializes the speech recognition and text-to-speech engines.
-2. It listens through the microphone for the wake word.
-3. Once activated, it captures the user's voice command.
+1. Jarvis initializes its speech recognition and text-to-speech components.
+2. The microphone listens for the wake word.
+3. Once the wake word is recognized, Jarvis captures the next voice command.
 4. The command processor checks for predefined actions.
-5. Supported commands trigger the relevant website, music, or news functionality.
-6. Other commands are forwarded to Gemini AI.
-7. The generated response is converted into speech.
+5. Website, music, and news commands trigger their respective operations.
+6. Unrecognized commands are sent to Gemini AI for a response.
+7. The response is spoken aloud using text-to-speech.
 
 ## Troubleshooting
 
-**Microphone issues**
-- Check microphone permissions and connectivity.
+**Microphone problems**
+- Check microphone permissions and connections.
 - Verify that PyAudio is installed correctly.
 
 **Speech recognition errors**
-- Ensure a stable internet connection for Google's online speech recognition.
-- Adjust the listening timeout and phrase duration when necessary.
+- Check your internet connection.
+- Speak clearly and adjust the listening timeout if necessary.
 
 **Gemini API errors**
 - Verify your API key and account access.
-- Confirm that the configured model ID is available.
-- Check network connectivity and API quotas.
+- Ensure the model ID is supported.
+- Check your API quota and network connection.
 
-**News or music issues**
-- Verify the news endpoint, API credentials, and response format.
-- Ensure the requested song exists in `musicLibrary.py` and has a valid URL.
+**News feature errors**
+- Verify the API endpoint and credentials.
+- Check the HTTP response status and JSON structure.
+
+**Music command errors**
+- Ensure the requested identifier exists in `musicLibrary.py`.
+- Verify that the corresponding URL is valid.
+
+## Security
+
+- Store API keys in environment variables instead of hardcoding them.
+- Add `.env`, `venv/`, `__pycache__/`, and `*.pyc` to `.gitignore`.
+- Never publish real credentials in source code or documentation.
+- Review all project files before pushing them to a public repository.
 
 ## Current Limitations
 
-- Online speech recognition requires an internet connection.
+- Online speech recognition requires internet access.
 - Only predefined website commands are supported directly.
-- Music links open in a web browser rather than being played by a dedicated media engine.
-- News retrieval depends on the configured API.
-- General AI responses require access to Google's Gemini API.
+- The music command parser supports simple, single-word song identifiers.
+- Music links open in a browser.
+- News retrieval depends on a correctly configured external API.
+- Gemini responses require valid API credentials and an available model.
+- The standalone Gemini example is separate from the main assistant workflow.
 
-## Future Enhancements
+## Future Improvements
 
-- Offline wake-word detection
-- Improved natural-language command processing
-- Support for multiword song titles
-- More website and desktop automation features
-- Improved error handling and logging
+- Dedicated offline wake-word detection
+- Support for multiword song names
+- Improved natural-language command handling
+- Better error handling and logging
+- More website automation commands
 - Configurable news categories
 - Continuous conversational interaction
-
-## Contributing
-
-Suggestions, bug reports, and improvements are welcome.
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Implement and test your changes.
-4. Submit a pull request with a clear description.
 
 ## Author
 
@@ -202,8 +272,8 @@ Python Developer | AI and Automation Enthusiast
 
 ## License
 
-No license has been specified yet. Add a `LICENSE` file before distributing this project under an open-source license.
+No license has been specified for this project yet. Add a `LICENSE` file if you intend to distribute it under an open-source license.
 
 ---
 
-*Developed by Aman using Python, Speech Recognition, Text-to-Speech, and Google Gemini AI.*
+*Built with Python, Speech Recognition, Text-to-Speech, and Google Gemini AI.*
